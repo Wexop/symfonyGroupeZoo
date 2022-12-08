@@ -105,7 +105,6 @@ class EspacesController extends AbstractController
 
                 $em->persist($espace);
 
-
                 $em->flush();
 
                 return $this->redirectToRoute("app_espaces");

@@ -101,8 +101,48 @@ class EnclosController extends AbstractController
             "enclos" => $enclos,
             "formulaire" => $form->createView()
         ]);
+    }
+
+    #[Route('/enclos/modifier/{id}', name: 'enclos_modifier')]
+    public function modifierEnclos($id,ManagerRegistry $doctrine, Request $request)
+    {
+        $enclos = $doctrine->getRepository(Enclos::class)->find($id);
+
+        if (!$enclos) {
+            throw $this->createNotFoundException("Aucun enclos avec l'id $id");
+        }
+
+        $form = $this->createForm(EnclosType::class, $enclos);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $newEnclosSuperficie = $form->getData()->getSuperficie();
+            $espaceEnclos = $form->getData()->getEspaceId()->getEnclos();
+            $superficieLibre = $form->getData()->getEspaceId()->getSuperficie();
+
+            foreach ($espaceEnclos as $enclo ) {
+                $superficieLibre -= $enclo->getSuperficie();
+            }
+
+            if ($superficieLibre < $newEnclosSuperficie) {
+                throw $this->createNotFoundException("Cet enclos prend trop de place dans cet espace");
+            }
+
+            $em = $doctrine->getManager();
+
+            $em->persist($enclos);
+
+            $em->flush();
+
+            return $this->redirectToRoute("voir_enclos", ["id" => $enclos->getEspaceId()->getId()]);
+
+        }
 
 
+        return $this->render("enclos/index.html.twig", [
+            "formulaire" => $form->createView()
+        ]);
     }
 
 }
