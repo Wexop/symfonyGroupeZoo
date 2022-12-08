@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Enclos;
 use App\Entity\Espace;
+use App\Form\EnclosSupprimerType;
 use App\Form\EnclosType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -66,6 +67,38 @@ class EnclosController extends AbstractController
 
 
         return $this->render("enclos/index.html.twig", [
+            "formulaire" => $form->createView()
+        ]);
+    }
+
+    #[Route('/espaces/supprimer/{id}', name: 'enclos_supprimer')]
+    public function supprimerEnclos($id, ManagerRegistry $doctrine, Request $request)
+    {
+
+        $enclos = $doctrine->getRepository(Enclos::class)->find($id);
+
+
+        if (!$enclos) {
+            throw $this->createNotFoundException("Aucun enclos avec l'id $id");
+        }
+
+        $form = $this->createForm(EnclosSupprimerType::class, $enclos);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $doctrine->getManager();
+
+            $em->remove($enclos);
+
+            $em->flush();
+
+            return $this->redirectToRoute("voir_enclos", ["id" => $enclos->getEspaceID()->getId()]);
+
+        }
+
+        return $this->render("enclos/supprimer.html.twig", [
+            "enclos" => $enclos,
             "formulaire" => $form->createView()
         ]);
 
