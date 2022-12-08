@@ -1,20 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EspacesController!{% endblock %}
+{% block title %}Gestion des espaces {% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="example-wrapper">
+        <h1>Gestion des espaces</h1>
+        <table class="table table-striped">
+            <tr>
+                <th>Nom de l'espace</th>
+                <th>Superficie en m²</th>
+                <th>Date d'ouverture</th>
+                <th>Date de fermeture</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for e in espaces %}
+                <tr>
+                    <td>{{ e.nom }}</td>
+                    <td>{{ e.superficie }}</td>
+                    <td>{% if e.dateOuverture %}
+                            {{ e.dateOuverture.format('d/m/Y') }}
+                            {% else %}
+                            Aucune date
+                        {% endif %}
+                        </td>
+                    <td>{% if e.dateFermeture %}
+                            {{ e.dateFermeture.format('d/m/Y') }}
+                        {% else %}
+                            Aucune date
+                        {% endif %}</td>
+                    <td>
+     {#                   <a class="btn btn-primary" href="{{ path("categorie_modifier", {"id":c.id}) }}">modifier</a>#}
+                    </td>
+                    <td>
+   {#                     <a class="btn btn-danger" href="{{ path("categorie_supprimer", {"id":c.id}) }}">supprimer</a>#}
+                    </td>
+                    <td>
+    {#                    <a class="btn btn-success" href="{{ path("voir_chatons", {"id":c.id}) }}">voir les chatons</a>#}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <h2>Ajouter un espace</h2>
+        {{ form(formulaire) }}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/Matthieu/Desktop/COURS/SN2/symfonyGroupeZoo/src/Controller/EspacesController.php'|file_link(0) }}">src/Controller/EspacesController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/Matthieu/Desktop/COURS/SN2/symfonyGroupeZoo/templates/espaces/index.html.twig'|file_link(0) }}">templates/espaces/index.html.twig</a></code></li>
-    </ul>
-</div>
+
+    </div>
 {% endblock %}
