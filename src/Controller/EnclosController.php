@@ -42,10 +42,21 @@ class EnclosController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $newEnclosSuperficie = $form->getData()->getSuperficie();
+            $espaceEnclos = $form->getData()->getEspaceId()->getEnclos();
+            $superficieLibre = $form->getData()->getEspaceId()->getSuperficie();
+
+            foreach ($espaceEnclos as $enclo ) {
+                $superficieLibre -= $enclo->getSuperficie();
+            }
+
+            if ($superficieLibre < $newEnclosSuperficie) {
+                throw $this->createNotFoundException("Cet enclos prend trop de place dans cet espace");
+            }
+
             $em = $doctrine->getManager();
 
             $em->persist($enclos);
-
 
             $em->flush();
 
