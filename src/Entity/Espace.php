@@ -36,6 +36,10 @@ class Espace
         $this->enclos = new ArrayCollection();
     }
 
+    public function __toString() :string {
+        return $this->nom;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

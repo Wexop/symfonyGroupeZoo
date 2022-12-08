@@ -4,43 +4,10 @@
 
 {% block body %}
     <div class="example-wrapper">
-        <h1>Gestion des enclos de l'espace  {{ espace.nom }}</h1>
-        <table class="table table-striped">
-            <tr>
-                <th>Nom de l'enclos</th>
-                <th>Superficie en m²</th>
-                <th>Nombre d'animaux maximum</th>
-                <th>Quarentaine</th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            {% for e in enclos %}
-                <tr>
-                    <td>{{ e.nom }}</td>
-                    <td>{{ e.superficie }}</td>
-                    <td>{{ e.maxAnimaux }}
-                    </td>
-                    <td>{% if e.quarentaine == 1 %}
-                            Oui
-                        {% else %}
-                            non
-                        {% endif %}</td>
-                    <td>
-                        {# <a class="btn btn-primary" href="{{ path("espaces_modifier", {"id":e.id}) }}">modifier</a> #}
-                    </td>
-                    <td>
-                        {# <a class="btn btn-danger" href="{{ path("espaces_supprimer", {"id":e.id}) }}">supprimer</a> #}
-                    </td>
-                    <td>
-                        {# <a class="btn btn-success" href="{{ path("voir_chatons", {"id":c.id}) }}">voir les chatons</a> #}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
 
-        <h2>Ajouter un espace</h2>
+        <h2>Ajouter un enclos</h2>
         {{ form(formulaire) }}
+
 
 
     </div>

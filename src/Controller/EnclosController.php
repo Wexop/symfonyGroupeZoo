@@ -30,6 +30,33 @@ class EnclosController extends AbstractController
             "espace" => $espace,
             "enclos" => $enclos
         ]);
+    }
+
+    #[Route('/enclos/ajouter/', name: 'enclos_ajouter')]
+    public function ajouterEnclos(ManagerRegistry $doctrine, Request $request)
+    {
+        $enclos = new Enclos();
+
+        $form = $this->createForm(EnclosType::class, $enclos);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $doctrine->getManager();
+
+            $em->persist($enclos);
+
+
+            $em->flush();
+
+            return $this->redirectToRoute("voir_enclos", ["id" => $enclos->getEspaceId()->getId()]);
+
+        }
+
+
+        return $this->render("enclos/index.html.twig", [
+            "formulaire" => $form->createView()
+        ]);
 
 
     }
