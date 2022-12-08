@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Espace;
+use App\Form\EspaceSupprimerType;
 use App\Form\EspaceType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,9 +38,6 @@ class EspacesController extends AbstractController
             else {
                 throw $this->createNotFoundException("Erreur dans le formulaire : vérifier si les dates d'ouverture et de fermeture sont correctement indiquées");
             }
-
-
-
         }
 
         $repo = $doctrine->getRepository(Espace::class);
@@ -50,4 +48,48 @@ class EspacesController extends AbstractController
             "formulaire" => $form->createView()
         ]);
     }
+
+    #[Route('/espaces/supprimer/{id}', name: 'espaces_supprimer')]
+    public function supprimerEspace($id, ManagerRegistry $doctrine, Request $request)
+    {
+        //Récupérer la catégorie dans la BDD
+        $espace = $doctrine->getRepository(Espace::class)->find($id);
+
+        //si on n'a rien trouvé -> 404
+
+        if (!$espace) {
+            throw $this->createNotFoundException("Aucun espace avec l'id $id");
+        }
+
+        //si on arrive la, c'est qu'on a trouvé une catégorie
+        //on crée le formulaire avec (il sera rempli avec ses valeurs)
+        $form = $this->createForm(EspaceSupprimerType::class, $espace);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // le handleRequest a rempli notre objet $vcategorieNew
+            // qui n'est plus vide
+            //pour sauvegarder, on va récupérer un entitymanager de doctrine
+            //qui comme son nom l'indique gère les identités
+            $em = $doctrine->getManager();
+            // on lui dit de la supprimer de la BDD
+            $em->remove($espace);
+
+            //générer l'insert
+            $em->flush();
+
+            //retour à la page d'accueil
+            return $this->redirectToRoute("app_espaces");
+
+        }
+
+
+        return $this->render("espaces/supprimer.html.twig", [
+            "espace" => $espace,
+            "formulaire" => $form->createView()
+        ]);
+
+
+    }
+
 }
