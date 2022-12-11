@@ -19,7 +19,7 @@
                 <th>Quarentaine</th>
                 <th></th>
                 <th></th>
-                <th></th>
+
             </tr>
             {% for a in animaux %}
                 <tr>
@@ -58,13 +58,10 @@
                             non
                         {% endif %}</td>
                     <td>
-                        {# <a class="btn btn-primary" href="{{ path("enclos_modifier", {"id":e.id}) }}">modifier</a> #}
+                         <a class="btn btn-primary" href="{{ path("animaux_modifier", {"id":a.id}) }}">modifier</a>
                     </td>
                     <td>
-                        {# <a class="btn btn-danger" href="{{ path("enclos_supprimer", {"id":e.id}) }}">supprimer</a> #}
-                    </td>
-                    <td>
-                        {# <a class="btn btn-success" href="{{ path("voir_chatons", {"id":c.id}) }}">voir les chatons</a> #}
+                         <a class="btn btn-danger" href="{{ path("animaux_supprimer", {"id":a.id}) }}">supprimer</a>
                     </td>
                 </tr>
             {% endfor %}

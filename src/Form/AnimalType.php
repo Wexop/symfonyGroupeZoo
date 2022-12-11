@@ -19,10 +19,7 @@ class AnimalType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('numeroIdentification', null, [
-                "attr" => ["minlength" => "14",
-                    "maxlength" => "14",]
-            ])
+            ->add('numeroIdentification')
             ->add('nom')
             ->add('dateNaissance')
             ->add('dateArrive', DateType::class, [

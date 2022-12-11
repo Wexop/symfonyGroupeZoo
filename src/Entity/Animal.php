@@ -14,8 +14,8 @@ class Animal
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $numeroIdentification = null;
+    #[ORM\Column(type: Types::BIGINT)]
+    private ?string $numeroIdentification = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
@@ -53,12 +53,12 @@ class Animal
         return $this->id;
     }
 
-    public function getNumeroIdentification(): ?int
+    public function getNumeroIdentification(): ?string
     {
         return $this->numeroIdentification;
     }
 
-    public function setNumeroIdentification(int $numeroIdentification): self
+    public function setNumeroIdentification(string $numeroIdentification): self
     {
         $this->numeroIdentification = $numeroIdentification;
 
