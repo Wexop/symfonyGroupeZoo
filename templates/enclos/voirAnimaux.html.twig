@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des animaux {% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+        <h1>Gestion des animaux de l'enclos {{ enclos.nom }}</h1>
+        <table class="table table-striped">
+            <tr>
+                <th>Numero d'identification</th>
+                <th>Nom</th>
+                <th>Date de naissance</th>
+                <th>Date d'arrivé au zoo</th>
+                <th>Date de départ au zoo</th>
+                <th>Genre</th>
+                <th>Espèce</th>
+                <th>Stérile</th>
+                <th>Quarentaine</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for a in animaux %}
+                <tr>
+                    <td>{{ a.numeroIdentification }}</td>
+                    <td>{{ a.nom }}</td>
+                    <td>{{ a.dateArrive }}</td>
+                    <td>{{ a.dateDepart }}</td>
+                    <td>{{ a.genre }}</td>
+                    <td>{{ a.espece }}</td>
+                    <td>{{ a.sterile }}</td>
+                    <td>{% if a.quarentaine == 1 %}
+                            Oui
+                        {% else %}
+                            non
+                        {% endif %}</td>
+                    <td>
+                        {# <a class="btn btn-primary" href="{{ path("enclos_modifier", {"id":e.id}) }}">modifier</a> #}
+                    </td>
+                    <td>
+                        {# <a class="btn btn-danger" href="{{ path("enclos_supprimer", {"id":e.id}) }}">supprimer</a> #}
+                    </td>
+                    <td>
+                        {# <a class="btn btn-success" href="{{ path("voir_chatons", {"id":c.id}) }}">voir les chatons</a> #}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Ajouter un enclos</h2>
+{#        <a class="btn btn-primary" href="{{ path("enclos_ajouter") }}">Ajouter un animal</a>#}
+
+
+    </div>
+{% endblock %}
