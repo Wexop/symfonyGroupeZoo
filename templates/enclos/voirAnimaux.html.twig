@@ -25,11 +25,33 @@
                 <tr>
                     <td>{{ a.numeroIdentification }}</td>
                     <td>{{ a.nom }}</td>
-                    <td>{{ a.dateArrive }}</td>
-                    <td>{{ a.dateDepart }}</td>
+                    <td>{% if a.dateNaissance %}
+                            {{ a.dateNaissance.format('d/m/Y') }}
+                        {% else %}
+                            Aucune date
+                        {% endif %}</td>
+                    <td>{% if a.dateArrive %}
+                            {{ a.dateArrive.format('d/m/Y') }}
+                        {% else %}
+                            Aucune date
+                        {% endif %}</td>
+                    <td>{% if a.dateDepart %}
+                            {{ a.dateDepart.format('d/m/Y') }}
+                        {% else %}
+                            Aucune date
+                        {% endif %}</td>
+                    <td>{% if a.zooProprietaire == 1 %}
+                            Oui
+                        {% else %}
+                            non
+                        {% endif %}</td>
                     <td>{{ a.genre }}</td>
                     <td>{{ a.espece }}</td>
-                    <td>{{ a.sterile }}</td>
+                    <td>{% if a.sterile == 1 %}
+                            Oui
+                        {% else %}
+                            non
+                        {% endif %}</td>
                     <td>{% if a.quarentaine == 1 %}
                             Oui
                         {% else %}

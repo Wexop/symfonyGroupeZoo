@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,13 +20,13 @@ class AnimalType extends AbstractType
     {
         $builder
             ->add('numeroIdentification', null, [
-                "attr" => ["minlength" => 14,
-                    "maxlength" => 14,]
+                "attr" => ["minlength" => "14",
+                    "maxlength" => "14",]
             ])
             ->add('nom')
             ->add('dateNaissance')
-            ->add('dateArrive', DateType::class, [+
-                'data' => new DateTime("now")
+            ->add('dateArrive', DateType::class, [
+            'data' => new DateTime("now")
             ])
             ->add('zooProprietaire')
             ->add('genre', ChoiceType::class, [
@@ -43,7 +44,9 @@ class AnimalType extends AbstractType
                 "choice_label" => "nom",
                 "multiple" => false,
                 "expanded" => false,
-            ]);
+            ])
+            ->add("OK", SubmitType::class, ["label" => "Ajouter"]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -6,6 +6,8 @@ use App\Entity\Animal;
 use App\Entity\Enclos;
 use App\Form\AnimalType;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\String_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +20,7 @@ class AnimauxController extends AbstractController
     {
 
         $enclos = $doctrine->getRepository(Enclos::class)->find($id);
-        $animaux = [];
+        $animaux = $enclos->getAnimaux();
 
 
         if (!$enclos) {
@@ -41,14 +43,29 @@ class AnimauxController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $tailleNID = strlen((string)$animal->getNumeroIdentification());
+            if ($tailleNID == 14) {
 
-            $em = $doctrine->getManager();
+                if ($animal->getDateNaissance() == null ||
+                    $animal->getDateNaissance() < $animal->getDateArrive()
+                ) {
+                    if ( $animal->getDateDepart() == null || $animal->getDateArrive() < $animal->getDateDepart()) {
 
-            $em->persist($animal);
+                        if ($animal->isSterile() && $animal->getGenre() != "non déterminé") {
 
-            $em->flush();
+                            $em = $doctrine->getManager();
+                            $em->persist($animal);
+                            $em->flush();
 
-            return $this->redirectToRoute("enclos_voirAnimaux", ["id" => $animal->getEnclos()->getId()]);
+                            return $this->redirectToRoute("enclos_voirAnimaux", ["id" => $animal->getEnclos()->getId()]);
+
+                        } else throw $this->createNotFoundException("L'animal doit avoir un genre pour être stérile");
+
+                    } else  throw $this->createNotFoundException("La date d'arrivée doit être inférieur à la date de départ !");
+
+                } else throw $this->createNotFoundException("La date de naissance ne peut pas être inférieur à la date d'arrivée au zoo !");
+
+            } else throw $this->createNotFoundException("Le numero d'identification doit faire 14 chiffres, celui ci fait $tailleNID");
 
         }
 
