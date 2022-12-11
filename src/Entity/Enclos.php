@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EnclosRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EnclosRepository::class)]
@@ -28,6 +30,14 @@ class Enclos
 
     #[ORM\Column]
     private ?bool $quarentaine = null;
+
+    #[ORM\OneToMany(mappedBy: 'enclos', targetEntity: Animal::class, orphanRemoval: true)]
+    private Collection $animaux;
+
+    public function __construct()
+    {
+        $this->animaux = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +100,36 @@ class Enclos
     public function setQuarentaine(bool $quarentaine): self
     {
         $this->quarentaine = $quarentaine;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Animal>
+     */
+    public function getAnimaux(): Collection
+    {
+        return $this->animaux;
+    }
+
+    public function addAnimaux(Animal $animaux): self
+    {
+        if (!$this->animaux->contains($animaux)) {
+            $this->animaux->add($animaux);
+            $animaux->setEnclos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimaux(Animal $animaux): self
+    {
+        if ($this->animaux->removeElement($animaux)) {
+            // set the owning side to null (unless already changed)
+            if ($animaux->getEnclos() === $this) {
+                $animaux->setEnclos(null);
+            }
+        }
 
         return $this;
     }

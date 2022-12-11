@@ -17,14 +17,17 @@ class Animal
     #[ORM\Column]
     private ?int $numeroIdentification = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateNaissance = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateArrive = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateDepart = null;
 
     #[ORM\Column]
     private ?bool $zooProprietaire = null;
@@ -40,6 +43,10 @@ class Animal
 
     #[ORM\Column]
     private ?bool $quarentaine = null;
+
+    #[ORM\ManyToOne(inversedBy: 'animaux')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Enclos $enclos = null;
 
     public function getId(): ?int
     {
@@ -63,7 +70,7 @@ class Animal
         return $this->nom;
     }
 
-    public function setNom(?string $nom): self
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
 
@@ -87,9 +94,21 @@ class Animal
         return $this->dateArrive;
     }
 
-    public function setDateArrive(?\DateTimeInterface $dateArrive): self
+    public function setDateArrive(\DateTimeInterface $dateArrive): self
     {
         $this->dateArrive = $dateArrive;
+
+        return $this;
+    }
+
+    public function getDateDepart(): ?\DateTimeInterface
+    {
+        return $this->dateDepart;
+    }
+
+    public function setDateDepart(?\DateTimeInterface $dateDepart): self
+    {
+        $this->dateDepart = $dateDepart;
 
         return $this;
     }
@@ -150,6 +169,18 @@ class Animal
     public function setQuarentaine(bool $quarentaine): self
     {
         $this->quarentaine = $quarentaine;
+
+        return $this;
+    }
+
+    public function getEnclos(): ?Enclos
+    {
+        return $this->enclos;
+    }
+
+    public function setEnclos(?Enclos $enclos): self
+    {
+        $this->enclos = $enclos;
 
         return $this;
     }

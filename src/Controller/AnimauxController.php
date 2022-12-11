@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Animal;
 use App\Entity\Enclos;
+use App\Form\AnimalType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +29,32 @@ class AnimauxController extends AbstractController
         return $this->render("enclos/voirAnimaux.html.twig", [
             "animaux" => $animaux,
             "enclos" => $enclos
+        ]);
+    }
+
+    #[Route('/animaux/ajouter/', name: 'animaux_ajouter')]
+    public function ajouterAnimaux(ManagerRegistry $doctrine, Request $request)
+    {
+        $animal = new Animal();
+
+        $form = $this->createForm(AnimalType::class, $animal);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $doctrine->getManager();
+
+            $em->persist($animal);
+
+            $em->flush();
+
+            return $this->redirectToRoute("enclos_voirAnimaux", ["id" => $animal->getEnclos()->getId()]);
+
+        }
+
+
+        return $this->render("animaux/index.html.twig", [
+            "formulaire" => $form->createView()
         ]);
     }
 }
