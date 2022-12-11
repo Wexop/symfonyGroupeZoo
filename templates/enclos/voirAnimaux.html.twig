@@ -3,7 +3,7 @@
 {% block title %}Gestion des animaux {% endblock %}
 
 {% block body %}
-    <div class="example-wrapper">
+
         <h1>Gestion des animaux de l'enclos {{ enclos.nom }}</h1>
         <table class="table table-striped">
             <tr>
@@ -12,6 +12,7 @@
                 <th>Date de naissance</th>
                 <th>Date d'arrivé au zoo</th>
                 <th>Date de départ au zoo</th>
+                <th>Le zoo est propriétaire</th>
                 <th>Genre</th>
                 <th>Espèce</th>
                 <th>Stérile</th>
@@ -51,5 +52,5 @@
 {#        <a class="btn btn-primary" href="{{ path("enclos_ajouter") }}">Ajouter un animal</a>#}
 
 
-    </div>
+
 {% endblock %}
