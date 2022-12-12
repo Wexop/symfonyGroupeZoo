@@ -55,7 +55,7 @@ class AnimauxController extends AbstractController
 
             $tailleNID = strlen($animal->getNumeroIdentification());
 
-            if ($tailleNID == 14) {
+            if ($tailleNID == 14 && is_numeric( $animal->getNumeroIdentification())) {
 
                 if ($animal->getDateNaissance() == null ||
                     $animal->getDateNaissance() < $animal->getDateArrive()
@@ -93,7 +93,8 @@ class AnimauxController extends AbstractController
 
                 } else throw $this->createNotFoundException("La date de naissance ne peut pas être inférieur à la date d'arrivée au zoo !");
 
-            } else throw $this->createNotFoundException("Le numero d'identification doit faire 14 chiffres, celui ci fait $tailleNID");
+            } else $tailleNID != 14 ? throw $this->createNotFoundException("Le numero d'identification doit faire 14 chiffres, celui ci fait $tailleNID")
+            : throw $this->createNotFoundException("Le numero d'identification doit contenir seulement des chiffres !");
 
         }
 
