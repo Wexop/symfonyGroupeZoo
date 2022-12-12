@@ -53,6 +53,7 @@ class AnimauxController extends AbstractController
 
             foreach ($animaux as $a) {
                 if ($a->getEnclos()->getId() == $enclosId) $nbAnimauxEnclos += 1;
+                if ($a->getNumeroIdentification() == $animal->getNumeroIdentification()) throw  $this->createNotFoundException("ce numero d'identification appartient à un autre animal !");
             }
 
             $tailleNID = strlen(sprintf('%014d', $animal->getNumeroIdentification()));
@@ -125,6 +126,8 @@ class AnimauxController extends AbstractController
 
             foreach ($animaux as $a) {
                 if ($a->getEnclos()->getId() == $enclosId) $nbAnimauxEnclos += 1;
+                if ($a->getNumeroIdentification() == $animal->getNumeroIdentification()) throw  $this->createNotFoundException("ce numero d'identification appartient à un autre animal !");
+
             }
 
             $tailleNID = strlen(sprintf('%014d', $animal->getNumeroIdentification()));
