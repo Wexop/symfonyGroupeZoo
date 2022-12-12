@@ -45,17 +45,17 @@ class AnimauxController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $enclosId = $animal->getEnclos()->getId();
-            $enclos = $doctrine->getRepository(Enclos::class)->find( $enclosId );
+            $enclos = $doctrine->getRepository(Enclos::class)->find($enclosId);
             $enclosMaxAnimaux = $enclos->getMaxAnimaux();
 
             $animaux = $doctrine->getRepository(Animal::class)->findAll();
             $nbAnimauxEnclos = 0;
 
-            foreach($animaux as $a) {
-                if ($a->getEnclos()->getId() == $enclosId ) $nbAnimauxEnclos += 1;
+            foreach ($animaux as $a) {
+                if ($a->getEnclos()->getId() == $enclosId) $nbAnimauxEnclos += 1;
             }
 
-            $tailleNID = strlen(sprintf('%014d',$animal->getNumeroIdentification()));
+            $tailleNID = strlen(sprintf('%014d', $animal->getNumeroIdentification()));
 
             if ($tailleNID == 14) {
 
@@ -77,15 +77,15 @@ class AnimauxController extends AbstractController
                                     if ($everyAnimauxNotQuarentaine) {
                                         $enclos->setQuarentaine(false);
                                     }
+                                } else {
+                                    if ($animal->isQuarentaine()) $enclos->setQuarentaine(true);
                                 }
 
+                                $em = $doctrine->getManager();
+                                $em->persist($animal);
+                                $em->flush();
 
-
-                            $em = $doctrine->getManager();
-                            $em->persist($animal);
-                            $em->flush();
-
-                            return $this->redirectToRoute("enclos_voirAnimaux", ["id" => $animal->getEnclos()->getId()]);
+                                return $this->redirectToRoute("enclos_voirAnimaux", ["id" => $animal->getEnclos()->getId()]);
 
                             } else throw $this->createNotFoundException("Il y a trop d'animaux dans cet enclos !");
 
@@ -117,17 +117,17 @@ class AnimauxController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $enclosId = $animal->getEnclos()->getId();
-            $enclos = $doctrine->getRepository(Enclos::class)->find( $enclosId );
+            $enclos = $doctrine->getRepository(Enclos::class)->find($enclosId);
             $enclosMaxAnimaux = $enclos->getMaxAnimaux();
 
             $animaux = $doctrine->getRepository(Animal::class)->findAll();
             $nbAnimauxEnclos = 0;
 
-            foreach($animaux as $a) {
-                if ($a->getEnclos()->getId() == $enclosId ) $nbAnimauxEnclos += 1;
+            foreach ($animaux as $a) {
+                if ($a->getEnclos()->getId() == $enclosId) $nbAnimauxEnclos += 1;
             }
 
-            $tailleNID = strlen(sprintf('%014d',$animal->getNumeroIdentification()));
+            $tailleNID = strlen(sprintf('%014d', $animal->getNumeroIdentification()));
 
             if ($tailleNID == 14) {
 
@@ -149,9 +149,9 @@ class AnimauxController extends AbstractController
                                     if ($everyAnimauxNotQuarentaine) {
                                         $enclos->setQuarentaine(false);
                                     }
+                                } else {
+                                    if ($animal->isQuarentaine()) $enclos->setQuarentaine(true);
                                 }
-
-
 
                                 $em = $doctrine->getManager();
                                 $em->persist($animal);
