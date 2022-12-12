@@ -44,7 +44,7 @@ class AnimauxController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $tailleNID = strlen((string)$animal->getNumeroIdentification());
+            $tailleNID = strlen(sprintf('%014d',$animal->getNumeroIdentification()));
             if ($tailleNID == 14) {
 
                 if ($animal->getDateNaissance() == null ||
