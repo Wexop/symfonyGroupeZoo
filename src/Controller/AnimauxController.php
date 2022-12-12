@@ -44,7 +44,19 @@ class AnimauxController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $enclosId = $animal->getEnclos()->getId();
+            $enclos = $doctrine->getRepository(Enclos::class)->find( $enclosId );
+            $enclosMaxAnimaux = $enclos->getMaxAnimaux();
+
+            $animaux = $doctrine->getRepository(Animal::class)->findAll();
+            $nbAnimauxEnclos = 0;
+
+            foreach($animaux as $a) {
+                if ($a->getEnclos()->getId() == $enclosId ) $nbAnimauxEnclos += 1;
+            }
+
             $tailleNID = strlen(sprintf('%014d',$animal->getNumeroIdentification()));
+
             if ($tailleNID == 14) {
 
                 if ($animal->getDateNaissance() == null ||
@@ -54,11 +66,17 @@ class AnimauxController extends AbstractController
 
                         if ($animal->isSterile() == 1 && $animal->getGenre() != "non déterminé" || $animal->isSterile() == 0) {
 
+                            if ($nbAnimauxEnclos < $enclosMaxAnimaux) {
+
+
+
                             $em = $doctrine->getManager();
                             $em->persist($animal);
                             $em->flush();
 
                             return $this->redirectToRoute("enclos_voirAnimaux", ["id" => $animal->getEnclos()->getId()]);
+
+                            } else throw $this->createNotFoundException("Il y a trop d'animaux dans cet enclos !");
 
                         } else throw $this->createNotFoundException("L'animal doit avoir un genre pour être stérile");
 
@@ -85,7 +103,19 @@ class AnimauxController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $tailleNID = strlen((string)$animal->getNumeroIdentification());
+            $enclosId = $animal->getEnclos()->getId();
+            $enclos = $doctrine->getRepository(Enclos::class)->find( $enclosId );
+            $enclosMaxAnimaux = $enclos->getMaxAnimaux();
+
+            $animaux = $doctrine->getRepository(Animal::class)->findAll();
+            $nbAnimauxEnclos = 0;
+
+            foreach($animaux as $a) {
+                if ($a->getEnclos()->getId() == $enclosId ) $nbAnimauxEnclos += 1;
+            }
+
+            $tailleNID = strlen(sprintf('%014d',$animal->getNumeroIdentification()));
+
             if ($tailleNID == 14) {
 
                 if ($animal->getDateNaissance() == null ||
@@ -95,11 +125,15 @@ class AnimauxController extends AbstractController
 
                         if ($animal->isSterile() == 1 && $animal->getGenre() != "non déterminé" || $animal->isSterile() == 0) {
 
-                            $em = $doctrine->getManager();
-                            $em->persist($animal);
-                            $em->flush();
+                            if ($nbAnimauxEnclos <= $enclosMaxAnimaux) {
+                                
+                                $em = $doctrine->getManager();
+                                $em->persist($animal);
+                                $em->flush();
 
-                            return $this->redirectToRoute("enclos_voirAnimaux", ["id" => $animal->getEnclos()->getId()]);
+                                return $this->redirectToRoute("enclos_voirAnimaux", ["id" => $animal->getEnclos()->getId()]);
+
+                            } else throw $this->createNotFoundException("Il y a trop d'animaux dans cet enclos !");
 
                         } else throw $this->createNotFoundException("L'animal doit avoir un genre pour être stérile");
 
