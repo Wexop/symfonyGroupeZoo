@@ -50,7 +50,7 @@ class EnclosController extends AbstractController
             $espaceEnclos = $form->getData()->getEspaceId()->getEnclos();
             $superficieLibre = $form->getData()->getEspaceId()->getSuperficie();
 
-            foreach ($espaceEnclos as $enclo ) {
+            foreach ($espaceEnclos as $enclo) {
                 $superficieLibre -= $enclo->getSuperficie();
             }
 
@@ -96,13 +96,16 @@ class EnclosController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $em = $doctrine->getManager();
+            if ($enclos->getAnimaux()->isEmpty()) {
 
-            $em->remove($enclos);
+                $em = $doctrine->getManager();
 
-            $em->flush();
+                $em->remove($enclos);
 
-            return $this->redirectToRoute("voir_enclos", ["id" => $enclos->getEspaceID()->getId()]);
+                $em->flush();
+
+                return $this->redirectToRoute("voir_enclos", ["id" => $enclos->getEspaceID()->getId()]);
+            } else throw $this->createNotFoundException("Impossible de supprimer un enclos qui contient des animaux !");
 
         }
 
@@ -113,7 +116,7 @@ class EnclosController extends AbstractController
     }
 
     #[Route('/enclos/modifier/{id}', name: 'enclos_modifier')]
-    public function modifierEnclos($id,ManagerRegistry $doctrine, Request $request)
+    public function modifierEnclos($id, ManagerRegistry $doctrine, Request $request)
     {
         $enclos = $doctrine->getRepository(Enclos::class)->find($id);
 
@@ -132,7 +135,7 @@ class EnclosController extends AbstractController
             $espaceEnclos = $form->getData()->getEspaceId()->getEnclos();
             $superficieLibre = $form->getData()->getEspaceId()->getSuperficie();
 
-            foreach ($espaceEnclos as $enclo ) {
+            foreach ($espaceEnclos as $enclo) {
                 $superficieLibre -= $enclo->getSuperficie();
             }
 
@@ -155,7 +158,6 @@ class EnclosController extends AbstractController
             return $this->redirectToRoute("voir_enclos", ["id" => $enclos->getEspaceId()->getId()]);
 
         }
-
 
 
         return $this->render("enclos/index.html.twig", [
