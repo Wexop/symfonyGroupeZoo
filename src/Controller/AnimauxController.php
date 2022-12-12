@@ -126,7 +126,7 @@ class AnimauxController extends AbstractController
 
             foreach ($animaux as $a) {
                 if ($a->getEnclos()->getId() == $enclosId) $nbAnimauxEnclos += 1;
-                if ($a->getNumeroIdentification() == $animal->getNumeroIdentification()) throw  $this->createNotFoundException("ce numero d'identification appartient à un autre animal !");
+                if ($a->getNumeroIdentification() == $animal->getNumeroIdentification() && $a->getId() != $animal->getId()) throw  $this->createNotFoundException("ce numero d'identification appartient à un autre animal !");
 
             }
 
