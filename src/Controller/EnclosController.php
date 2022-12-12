@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Animal;
 use App\Entity\Enclos;
 use App\Entity\Espace;
 use App\Form\EnclosSupprimerType;
@@ -43,6 +44,8 @@ class EnclosController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $animaux = $enclos->getAnimaux();
+
             $newEnclosSuperficie = $form->getData()->getSuperficie();
             $espaceEnclos = $form->getData()->getEspaceId()->getEnclos();
             $superficieLibre = $form->getData()->getEspaceId()->getSuperficie();
@@ -53,6 +56,12 @@ class EnclosController extends AbstractController
 
             if ($superficieLibre < $newEnclosSuperficie) {
                 throw $this->createNotFoundException("Cet enclos prend trop de place dans cet espace");
+            }
+
+            if ($enclos->isQuarentaine()) {
+                foreach ($animaux as $a) {
+                    $a->setQuarentaine(true);
+                }
             }
 
             $em = $doctrine->getManager();
@@ -117,6 +126,8 @@ class EnclosController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $animaux = $enclos->getAnimaux();
+
             $newEnclosSuperficie = $form->getData()->getSuperficie();
             $espaceEnclos = $form->getData()->getEspaceId()->getEnclos();
             $superficieLibre = $form->getData()->getEspaceId()->getSuperficie();
@@ -129,6 +140,12 @@ class EnclosController extends AbstractController
                 throw $this->createNotFoundException("Cet enclos prend trop de place dans cet espace");
             }
 
+            if ($enclos->isQuarentaine()) {
+                foreach ($animaux as $a) {
+                    $a->setQuarentaine(true);
+                }
+            }
+
             $em = $doctrine->getManager();
 
             $em->persist($enclos);
@@ -138,6 +155,7 @@ class EnclosController extends AbstractController
             return $this->redirectToRoute("voir_enclos", ["id" => $enclos->getEspaceId()->getId()]);
 
         }
+
 
 
         return $this->render("enclos/index.html.twig", [

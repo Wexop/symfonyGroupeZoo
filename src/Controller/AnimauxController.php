@@ -68,6 +68,17 @@ class AnimauxController extends AbstractController
 
                             if ($nbAnimauxEnclos < $enclosMaxAnimaux) {
 
+                                if ($enclos->isQuarentaine()) {
+                                    $everyAnimauxNotQuarentaine = true;
+                                    foreach ($enclos->getAnimaux() as $a) {
+                                        $a->isQuarentaine() && $everyAnimauxNotQuarentaine = false;
+                                    }
+
+                                    if ($everyAnimauxNotQuarentaine) {
+                                        $enclos->setQuarentaine(false);
+                                    }
+                                }
+
 
 
                             $em = $doctrine->getManager();
@@ -99,6 +110,8 @@ class AnimauxController extends AbstractController
     {
         $animal = $doctrine->getRepository(Animal::class)->find($id);
 
+        if (!$animal) throw $this->createNotFoundException("aucun animal avec l'id $id");
+
         $form = $this->createForm(AnimalType::class, $animal);
         $form->handleRequest($request);
 
@@ -126,7 +139,20 @@ class AnimauxController extends AbstractController
                         if ($animal->isSterile() == 1 && $animal->getGenre() != "non déterminé" || $animal->isSterile() == 0) {
 
                             if ($nbAnimauxEnclos <= $enclosMaxAnimaux) {
-                                
+
+                                if ($enclos->isQuarentaine()) {
+                                    $everyAnimauxNotQuarentaine = true;
+                                    foreach ($enclos->getAnimaux() as $a) {
+                                        $a->isQuarentaine() && $everyAnimauxNotQuarentaine = false;
+                                    }
+
+                                    if ($everyAnimauxNotQuarentaine) {
+                                        $enclos->setQuarentaine(false);
+                                    }
+                                }
+
+
+
                                 $em = $doctrine->getManager();
                                 $em->persist($animal);
                                 $em->flush();
@@ -155,6 +181,8 @@ class AnimauxController extends AbstractController
     public function supprimerAnimaux($id, ManagerRegistry $doctrine, Request $request)
     {
         $animal = $doctrine->getRepository(Animal::class)->find($id);
+
+        if (!$animal) throw $this->createNotFoundException("aucun animal avec l'id $id");
 
         $form = $this->createForm(AnimalSupprimerType::class, $animal);
         $form->handleRequest($request);
