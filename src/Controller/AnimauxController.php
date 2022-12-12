@@ -7,11 +7,8 @@ use App\Entity\Enclos;
 use App\Form\AnimalSupprimerType;
 use App\Form\AnimalType;
 use Doctrine\Persistence\ManagerRegistry;
-use phpDocumentor\Reflection\Types\Integer;
-use phpDocumentor\Reflection\Types\String_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AnimauxController extends AbstractController
@@ -56,7 +53,7 @@ class AnimauxController extends AbstractController
                 if ($a->getNumeroIdentification() == $animal->getNumeroIdentification()) throw  $this->createNotFoundException("ce numero d'identification appartient à un autre animal !");
             }
 
-            $tailleNID = strlen(sprintf('%014d', $animal->getNumeroIdentification()));
+            $tailleNID = strlen($animal->getNumeroIdentification());
 
             if ($tailleNID == 14) {
 
@@ -130,7 +127,7 @@ class AnimauxController extends AbstractController
 
             }
 
-            $tailleNID = strlen(sprintf('%014d', $animal->getNumeroIdentification()));
+            $tailleNID = strlen($animal->getNumeroIdentification());
 
             if ($tailleNID == 14) {
 
